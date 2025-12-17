@@ -1,0 +1,1736 @@
+<!-- Edited by GPT-5.2 Thinking -->
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>WBX Tokenomics — калькуляторы (3 стейкхолдера) + бюджет/аллокация</title>
+    <style>
+        :root {
+            --bg: #0b1020;
+            --text: #e9ecf5;
+            --muted: #a8b0c7;
+            --accent: #6aa7ff;
+            --ok: #4cd27b;
+            --bad: #ff6a7a;
+            --warn: #ffcc66;
+            --border: rgba(255, 255, 255, .10);
+            --shadow: 0 16px 40px rgba(0, 0, 0, .35);
+            --radius: 16px;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(1200px 600px at 20% 10%, rgba(106, 167, 255, .25), transparent 55%),
+            radial-gradient(900px 500px at 80% 20%, rgba(76, 210, 123, .12), transparent 55%),
+            var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            line-height: 1.35;
+        }
+
+        header {
+            padding: 28px 18px 10px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin: 0 0 6px;
+            font-size: 22px;
+            font-weight: 700
+        }
+
+        .subtitle {
+            color: var(--muted);
+            max-width: 86ch
+        }
+
+        .wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 12px 18px 32px;
+            display: grid;
+            gap: 14px
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .03));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .card .top {
+            padding: 14px 14px 12px;
+            background: rgba(0, 0, 0, .18);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .card .top .head {
+            max-width: 820px;
+            min-width: 0;
+        }
+
+        .card h2 {
+            margin: 0;
+            font-size: 16px
+        }
+
+        .pill {
+            font-size: 12px;
+            color: var(--muted);
+            padding: 4px 10px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: rgba(0, 0, 0, .15)
+        }
+
+        .content {
+            padding: 14px;
+            display: grid;
+            gap: 12px
+        }
+
+        .note {
+            padding: 12px;
+            border: 1px dashed rgba(255, 255, 255, .18);
+            border-radius: 14px;
+            color: var(--muted);
+            background: rgba(0, 0, 0, .12);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 10px;
+        }
+
+        .split .left .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        /* BUYER: параметры сеткой 2 в ряд */
+        .buyer-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        /* BUYER: split narrow-wide (аналогично global .split) */
+        .split-narrow-wide {
+            display: grid;
+            grid-template-columns: 0.55fr 1.45fr;
+            gap: 16px;
+            align-items: start;
+        }
+
+        /* Global: параметры слева, графики справа */
+        .split {
+            display: grid;
+            grid-template-columns: 0.55fr 1.45fr;
+            gap: 16px;
+            align-items: start;
+        }
+
+        .split .right {
+            display: grid;
+            gap: 10px;
+        }
+
+        /* Responsive: 1 column on small screens, single column grid for global params */
+        @media (max-width: 900px) {
+            .split {
+                grid-template-columns: 1fr;
+            }
+
+            .split .left .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .field {
+            grid-column: auto;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: rgba(0, 0, 0, .18);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+            height: 100%;
+        }
+
+        .field.w6 {
+            grid-column: span 6;
+        }
+
+        .field.w8 {
+            grid-column: span 8;
+        }
+
+        .field.w4 {
+            grid-column: span 4;
+        }
+
+        .field.w12 {
+            grid-column: span 12;
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--muted);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 6px 8px;
+            align-items: center;
+        }
+
+        label span.k {
+            white-space: normal;
+            line-height: 1.25;
+        }
+
+        label span:not(.k) {
+            white-space: nowrap;
+            opacity: .8;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 9px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(15, 23, 48, .65);
+            color: var(--text);
+            outline: none;
+            font-size: 13px;
+        }
+
+        input:focus, select:focus {
+            border-color: rgba(106, 167, 255, .55);
+            box-shadow: 0 0 0 3px rgba(106, 167, 255, .18)
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        button {
+            border: 1px solid rgba(255, 255, 255, .14);
+            background: rgba(106, 167, 255, .18);
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: rgba(106, 167, 255, .25)
+        }
+
+        button.ghost {
+            background: rgba(0, 0, 0, .15);
+            color: var(--muted);
+        }
+
+        .results {
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(0, 0, 0, .18);
+            border-radius: 14px;
+            padding: 12px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .kv {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: baseline;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .kv:last-child {
+            border-bottom: none
+        }
+
+        .kv .k {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .kv .v {
+            font-family: var(--mono);
+            font-size: 13px;
+            text-align: right
+        }
+
+        .v.ok {
+            color: var(--ok)
+        }
+
+        .v.bad {
+            color: var(--bad)
+        }
+
+        .v.warn {
+            color: var(--warn)
+        }
+
+        .formula {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: rgba(233, 236, 245, .9);
+            background: rgba(0, 0, 0, .22);
+            border: 1px solid rgba(255, 255, 255, .10);
+            border-radius: 12px;
+            padding: 10px;
+            overflow: auto;
+            white-space: pre;
+        }
+
+        .small {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        canvas {
+            width: 100%;
+            height: 360px;
+            background: rgba(0, 0, 0, .12);
+            border: 1px solid rgba(255, 255, 255, .10);
+            border-radius: 14px;
+        }
+
+        footer {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 18px 26px;
+            color: var(--muted);
+            font-size: 12px
+        }
+
+        /* (removed .field grid-column overrides for global grid on mobile) */
+
+        @media (max-width: 560px) {
+            .field {
+                grid-column: span 12
+            }
+
+            .field.w6 {
+                grid-column: span 12
+            }
+        }
+    </style>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)'], ['$', '$']],
+                displayMath: [['\\[', '\\]'], ['$$', '$$']]
+            },
+            svg: {fontCache: 'global'}
+        };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+<header>
+    <h1>WBX Tokenomics — 3 калькулятора и общий контроль эмиссии</h1>
+
+    <div class="subtitle">
+        Этот HTML-файл — интерактивный «черновик токеномики»: вы меняете входные параметры, а код в браузере
+        пересчитывает,
+        сколько WBX должно быть выдано трем группам участников за один период (эпоху) и какие ограничения сработают.
+        Он помогает быстро проверять, не «разъезжаются» ли стимулы между собой и как меняется результат при росте цены
+        токена,
+        оборота и активности.
+    </div>
+
+    <div class="subtitle" style="margin-top:10px">
+        Внутри есть три расчёта:
+        для покупателя — сколько WBX начислится как кэшбэк за покупку (учитывая текущую цену \(P(S)\) и затухание ставки
+        кэшбэка),
+        для продавца — сколько WBX начислится за полезные действия продавца в текущей эпохе \(t\) (с halving-логикой
+        награды),
+        для реферала — сколько WBX начислится за подтверждённый оборот \(\mathrm{GMV}_{\mathrm{ref}}\) (со снижением
+        ставки по мере роста supply).
+        Во всех трёх случаях код показывает промежуточные величины (например \(P(S)\), коэффициенты затухания,
+        компоненты награды),
+        чтобы было понятно, откуда взялся итог.
+    </div>
+
+    <div class="subtitle" style="margin-top:10px">
+        Главное ограничение согласованности такое: калькуляторы не выпускают токены «сами по себе».
+        Сначала каждая группа рассчитывает свою «заявку» \(\tilde D_t^{(g)}\), затем код распределяет общий выпуск за
+        эпоху \(M_t\)
+        между группами пропорционально заявкам:
+        \(D_t^{(g)}=M_t\cdot\frac{\tilde D_t^{(g)}}{\sum_h \tilde D_t^{(h)}}\).
+        И уже после этого применяется лимит аллокации (корзина группы): \(D_t^{(g)}\le S^{(g)}_{\max}-S^{(g)}_t\).
+    </div>
+</header>
+
+<div class="wrap">
+
+    <!-- GLOBAL / CONSISTENCY -->
+    <section class="card" id="card-global">
+        <div class="top">
+            <div class="head">
+                <h2>0) Глобальные параметры: как считается цена, общий выпуск и почему никто не «печатает» токены в
+                    одиночку</h2>
+                <div class="subtitle">
+                    Этот блок задаёт общий контур: одна цена токена для всех, один выпуск за эпоху и единые ограничения
+                    по аллокации.
+                    Дальше покупатель/продавец/реферал лишь «просят награду», а система решает, сколько реально можно
+                    выдать в рамках бюджета и корзин.
+                </div>
+            </div>
+            <div class="pill">Global</div>
+        </div>
+
+        <div class="content">
+            <div class="note">
+                В основе реализации лежат следующие принципы:<br>
+                1. Цена токена зависит от того, сколько токенов уже прошло через кривую: чем больше выпущено, тем дороже
+                следующий токен.<br>
+                2. За каждый период мы считаем, сколько токенов было уничтожено комиссиями, и от этого задаём, сколько
+                новых токенов вообще можно выпустить.<br>
+                3. Разные механики (кэшбэк, награды продавцам, рефералы) не выпускают токены напрямую: они формируют
+                заявки.<br>
+                4. Общий выпуск распределяется между заявками пропорционально.<br>
+                5. Даже после распределения каждая группа не может превысить свой лимит (корзину), выделенную
+                аллокацией.
+            </div>
+
+            <div class="note">
+                <div style="font-weight:600; margin-bottom:6px">Переменные простыми словами</div>
+
+                <div class="small">
+                    \(t\) — номер периода (эпохи): например неделя или месяц. Мы считаем всё «пакетом» за период, а не
+                    по каждой транзакции.<br>
+                    \(S_t\) — сколько токенов WBX находится в обращении на начало эпохи \(t\).<br>
+                    \(S_{t+1}\) — сколько будет в обращении после того, как мы выпустили награды и сожгли комиссии за
+                    эту эпоху.<br><br>
+
+                    \(B_t\) — сколько WBX было сожжено за эпоху \(t\) (например, из комиссий по принципу EIP-1559). Это
+                    «поглощение» токенов спросом и активностью.<br>
+                    \(I_t\) — сколько токенов разрешено разморозить из заранее выделенного пула стимулов в эпоху \(t\)
+                    (опционально, если такой пул существует).<br>
+                    \(\omega\in[0,1]\) — какая доля разморозки реально попадёт в награды (0 — не используем, 1 —
+                    используем полностью).<br><br>
+
+                    \(\mathrm{GMV}_t\) — оборот платформы за эпоху \(t\) (в фиате). Это простой индикатор «насколько
+                    платформа живая».<br>
+                    \(\mathrm{GMV}^{\star}\) — целевой/нормальный оборот, с которым сравниваем текущий (например, план
+                    или среднее за прошлые месяцы).<br>
+                    \(\eta>0\) — чувствительность: насколько быстро бюджет реагирует на рост/падение оборота (больше
+                    \(\eta\) — резче реакция).<br><br>
+
+                    \(\kappa_0\) — базовый коэффициент «сколько выпускать на единицу burn» в нормальном режиме.<br>
+                    \(\kappa_t\) — фактический коэффициент на эпоху \(t\), который автоматически меняется от
+                    \(\mathrm{GMV}_t\).<br>
+                    \(\kappa_{\min},\kappa_{\max}\) — предохранители: не даём \(\kappa_t\) стать слишком маленьким
+                    (заморозим рост) или слишком большим (раздуем выпуск).<br><br>
+
+                    \(M_t\) — общий бюджет выпуска токенов за эпоху \(t\): это максимум, сколько WBX можно выдать всем
+                    группам суммарно в этот период.<br>
+                    \(M_{\min}, M_{\max}\) — нижняя и верхняя границы бюджета (чтобы система была управляемой).<br>
+                    \(\mathrm{clip}(x, lo, hi)\) — «обрезка»: если \(x\) меньше \(lo\), берём \(lo\); если больше
+                    \(hi\), берём \(hi\).<br><br>
+
+                    \(g\) — группа стейкхолдеров (buyer/seller/ref и т.д.).<br>
+                    \(\tilde D^{(g)}_t\) — заявка группы: сколько токенов группа хотела бы получить по своей локальной
+                    формуле (до ограничений).<br>
+                    \(D^{(g)}_t\) — реальная выдача группе после распределения общего бюджета \(M_t\).<br><br>
+
+                    \(S^{(g)}_{\max}\) — лимит (корзина) группы на весь горизонт программы (например, 10 лет). Это часть
+                    общей аллокации.<br>
+                    \(S^{(g)}_t\) — сколько токенов уже выдано этой группе к началу эпохи \(t\).<br>
+                    \(S^{(g)}_{\max}-S^{(g)}_t\) — сколько токенов группе ещё осталось в корзине.<br>
+                </div>
+            </div>
+
+            <div class="note">
+                <div style="font-weight:600; margin-bottom:6px">Референсные значения</div>
+                <div class="small">
+                    <strong>Временная шкала и аллокация.</strong><br>
+                    Расчёты ведутся по дискретным эпохам — это может быть неделя или месяц (на практике для старта
+                    удобнее брать месяц).
+                    В примере аллокация стимулов распределена так: покупатели — 25%, продавцы — 15%, логистика — 5%,
+                    рефералы — 5%, резерв — 5%.
+                    В сумме это 55% от общего предложения токена.
+                    При горизонте распределения 10 лет это соответствует примерно 5.5% от total supply в год при
+                    равномерном графике.<br><br>
+
+                    <strong>Параметры бюджета выпуска.</strong><br>
+                    Базовый коэффициент \(\kappa_0\) обычно берут около 1 для нейтрального режима
+                    или в диапазоне \([0.7, 0.9]\), если хочется слегка дефляционной динамики при росте активности.
+                    Чтобы система не уходила в крайности, вводятся предохранители:
+                    \(\kappa_{\min}\) обычно выбирают в диапазоне \([0.3, 0.6]\),
+                    а \(\kappa_{\max}\) — в диапазоне \([1.2, 1.8]\).
+                    Параметр чувствительности \(\eta\) отвечает за реакцию бюджета на изменение оборота:
+                    около 0.5 — мягкая реакция, 1 — пропорциональная, 1.5 — агрессивная.
+                    Коэффициент \(\omega \in [0,1]\) задаёт долю размораживаемых стимулов:
+                    на ранней стадии его часто ставят в пределах 0.3–1.0, а по мере взросления системы снижают к нулю.
+                    Дополнительно задаются границы бюджета:
+                    \(M_{\min}\) — небольшой гарантированный минимум, чтобы выпуск не останавливался при нулевом burn,
+                    и \(M_{\max}\) — жёсткий потолок, защищающий систему от аномального раздувания эмиссии.<br><br>
+
+                    <strong>Кривая цены токена.</strong><br>
+                    В качестве стартового примера используется линейная price curve с параметрами
+                    \(P_0 = 0.05\), \(P_{\max} = 1.05\) и \(S_{\max} = 500{,}000{,}000\).
+                    Отсюда следуют коэффициенты \(a = P_0\) и \(b = (P_{\max} - P_0) / S_{\max}\).
+                    Эти значения не являются «истинными» — это лишь удобная точка отсчёта для симуляций.
+                    Меняя \(P_0\), \(P_{\max}\) и \(S_{\max}\), можно посмотреть, как форма кривой цены
+                    влияет на реальные начисления в токенах.
+                </div>
+            </div>
+
+
+        </div>
+        <div class="split">
+            <div class="left">
+                <div class="grid">
+                    <!-- База -->
+                    <div class="field">
+                        <label><span class="k">supply S_0</span><span>WBX</span></label>
+                        <input type="number" id="g_S" step="1" min="0" value="20000000"
+                               placeholder="Если запуск с нуля — 0">
+                    </div>
+
+                    <!-- Price curve -->
+                    <div class="field">
+                        <label><span class="k">P0</span><span>фиат/WBX</span></label>
+                        <input type="number" id="g_P0" step="0.0001" min="0" value="0.05">
+                    </div>
+                    <div class="field">
+                        <label><span class="k">Pmax</span><span>фиат/WBX</span></label>
+                        <input type="number" id="g_Pmax" step="0.0001" min="0" value="1.00">
+                    </div>
+                    <div class="field">
+                        <label><span class="k">Smax (cap для кривой цены)</span><span>WBX</span></label>
+                        <input type="number" id="g_Smax_curve" step="1" min="1" value="500000000">
+                    </div>
+
+                    <!-- GMV -->
+                    <div class="field">
+                        <label><span class="k">GMV_t (оборот за эпоху)</span><span>фиат/эпоха</span></label>
+                        <input type="number" id="g_GMV" step="0.01" min="0" value="10000000">
+                    </div>
+                    <div class="field">
+                        <label><span class="k">GMV* (целевой оборот)</span><span>фиат/эпоха</span></label>
+                        <input type="number" id="g_GMV_star" step="0.01" min="0.01" value="10000000">
+                    </div>
+
+                    <!-- kappa -->
+                    <div class="field">
+                        <label><span class="k">kappa0</span><span>—</span></label>
+                        <input type="number" id="g_kappa0" step="0.01" min="0" value="0.90">
+                    </div>
+                    <div class="field">
+                        <label><span class="k">eta</span><span>—</span></label>
+                        <input type="number" id="g_eta" step="0.01" min="0" value="1.00">
+                    </div>
+                    <div class="field">
+                        <label><span class="k">kappa_min (предохранитель снизу)</span><span>—</span></label>
+                        <input type="number" id="g_kmin" step="0.01" min="0" value="0.40">
+                    </div>
+                    <div class="field">
+                        <label><span class="k">kappa_max (предохранитель сверху)</span><span>—</span></label>
+                        <input type="number" id="g_kmax" step="0.01" min="0" value="1.50">
+                    </div>
+
+                    <!-- burn + unlock -->
+                    <div class="field">
+                        <label><span class="k">Burn B_t</span><span>WBX/эпоха</span></label>
+                        <input type="number" id="g_B" step="1" min="0" value="120000">
+                    </div>
+                    <div class="field">
+                        <label><span class="k">UtilBurn U_t</span><span>WBX/эпоха</span></label>
+                        <input type="number" id="g_U" step="1" min="0" value="60000">
+                    </div>
+
+                    <div class="field">
+                        <label><span class="k">Incentive unlock I_t</span><span>WBX/эпоха</span></label>
+                        <input type="number" id="g_I" step="1" min="0" value="300000">
+                    </div>
+                    <div class="field">
+                        <label><span
+                                class="k">omega (доля разморозки, которая идёт в выпуск)</span><span>0..1</span></label>
+                        <input type="number" id="g_omega" step="0.01" min="0" max="1" value="0.50">
+                    </div>
+
+                    <!-- M bounds -->
+                    <div class="field">
+                        <label><span class="k">M_min (минимальный бюджет выпуска)</span><span>WBX/эпоха</span></label>
+                        <input type="number" id="g_Mmin" step="1" min="0" value="50000">
+                    </div>
+                    <div class="field">
+                        <label><span class="k">M_max (максимальный бюджет выпуска)</span><span>WBX/эпоха</span></label>
+                        <input type="number" id="g_Mmax" step="1" min="0" value="500000">
+                    </div>
+                    <div class="field">
+                        <label><span class="k">Срок распределения (для корзин/аллокации)</span><span>лет</span></label>
+                        <input type="number" id="g_years" step="1" min="1" value="10">
+                    </div>
+                </div>
+                <!-- Корзины (лимиты аллокации) -->
+                <div class="field w12" style="margin-top:8px; margin-bottom:-4px; background:transparent; border:none; font-weight:600; color:var(--muted); padding:0 0 2px 0;">
+                    Корзины (лимиты аллокации)
+                </div>
+                <div class="grid" style="margin-bottom: 0;">
+                    <div class="field">
+                        <label><span class="k">Лимит корзины покупателей</span><span>WBX</span></label>
+                        <input type="number" id="buyer_cap" step="1" min="0" value="250000000">
+                    </div>
+                    <div class="field">
+                        <label><span class="k">Уже выдано покупателям</span><span>WBX</span></label>
+                        <input type="number" id="buyer_issued" step="1" min="0" value="60000000">
+                    </div>
+                    <div class="field">
+                        <label><span class="k">Лимит корзины продавцов</span><span>WBX</span></label>
+                        <input type="number" id="seller_cap" step="1" min="0" value="150000000">
+                    </div>
+                    <div class="field">
+                        <label><span class="k">Уже выдано продавцам</span><span>WBX</span></label>
+                        <input type="number" id="seller_issued" step="1" min="0" value="35000000">
+                    </div>
+                    <div class="field">
+                        <label><span class="k">Лимит корзины рефералов</span><span>WBX</span></label>
+                        <input type="number" id="ref_cap" step="1" min="0" value="50000000">
+                    </div>
+                    <div class="field">
+                        <label><span class="k">Уже выдано рефералам</span><span>WBX</span></label>
+                        <input type="number" id="ref_issued" step="1" min="0" value="12000000">
+                    </div>
+                </div>
+            </div>
+
+            <div class="right">
+                <div class="field w12">
+                    <canvas id="chart_price" aria-label="График цены по эпохам"></canvas>
+                    <div class="small">
+                        Рост цены WBX по эпохам: по оси X — эпохи, по оси Y — цена токена.
+                        Это проекция через \(P(S)=a+bS\), если каждый период supply меняется на \(M_t - B_t\).
+                    </div>
+                </div>
+                <div class="field w12">
+                  <canvas id="chart_price_supply"></canvas>
+                  <div class="small">
+                    Рост цены WBX по мере увеличения supply.
+                    Вертикальная линия — текущее значение supply.
+                    Это мгновенная цена на кривой, не средняя цена покупки.
+                  </div>
+                </div>
+
+                <div class="field w12">
+                    <canvas id="chart_budget" aria-label="График M_t и burn"></canvas>
+                    <div class="small">
+                        Сравнение \(M_t\), \(B_t\) и \(B_t+U_t\) в эпохе: быстрый индикатор, есть ли чистая инфляция и
+                        насколько она управляемая.
+
+                        Пример показывает управляемую эмиссию на ранней стадии: когда комиссионный burn ещё
+                        небольшой, часть наград берётся
+                        из заранее выделенного пула стимулов <span style="font-family:var(--mono)">I_t</span>. По
+                        мере роста оборота и комиссий роль
+                        пула снижается, а выпуск всё больше «привязывается» к burn.
+                        Аллокация стимулов: покупатели — 25%, продавцы — 15%, рефералы — 5% (в сумме 55% на
+                        стимулы). У каждой группы есть
+                        корзина (лимит), поэтому награды не могут превысить выделённую долю.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="results">
+            <div class="kv">
+                <div class="k">Базовая цена токена</div>
+                <div class="v" id="g_a"></div>
+            </div>
+
+            <div class="kv">
+                <div class="k">Скорость роста цены при выпуске новых токенов</div>
+                <div class="v" id="g_b"></div>
+            </div>
+
+            <div class="kv">
+                <div class="k">Текущая цена токена</div>
+                <div class="v ok" id="g_P"></div>
+            </div>
+
+            <div class="kv">
+                <div class="k">Коэффициент выпуска на эту эпоху</div>
+                <div class="v" id="g_kappa_t"></div>
+            </div>
+
+            <div class="kv">
+                <div class="k">Сколько токенов можно выдать в этой эпохе</div>
+                <div class="v ok" id="g_M"></div>
+            </div>
+
+            <div class="kv">
+                <div class="k">Supply после этой эпохи</div>
+                <div class="v" id="g_S_next"></div>
+            </div>
+
+            <div class="kv">
+                <div class="k">Баланс выпуска и сжигания</div>
+                <div class="v" id="g_neutral"></div>
+            </div>
+
+            <div class="kv">
+                <div class="k">Средний годовой бюджет стимулов</div>
+                <div class="v" id="g_year_budget"></div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- BUYER -->
+    <section class="card" id="card-buyer">
+        <div class="top">
+            <div class="head">
+                <h2>1) Покупатель: cashback-based модель как заявка на бюджет</h2>
+                <div class="subtitle">Сначала считаем \(\tilde D^{(buyer)}\), затем получаем \(D^{(buyer)}\) из общего
+                    \(M_t\) и корзины.
+                </div>
+            </div>
+            <div class="pill">Buyer</div>
+        </div>
+        <div class="content">
+            <div class="note">
+                Покупатель получает WBX за полезное поведение: покупки и удержание активности в системе. Чем меньше текущий supply, тем выше ставка кэшбэка, и тем больше заявка на награду. Калькулятор считает, сколько WBX покупатель хотел бы получить за текущую покупку, а затем показывает, какая часть этой заявки реально будет удовлетворена из общего бюджета эпохи с учётом лимита корзины покупателей.
+            </div>
+            <div class="note">
+                Система сначала считает ставку кэшбэка при текущем размере системы, затем переводит кэшбэк от покупки в эквивалент WBX по текущей цене. Это и есть заявка покупателя на награду за эпоху. Реальная выплата может быть меньше, если общий бюджет эпохи или лимит корзины ограничены.
+            </div>
+
+            <div class="split">
+                <div class="left">
+                    <div class="grid">
+                        <div class="field">
+                            <label><span class="k">Сумма покупки V</span><span>фиат</span></label>
+                            <input type="number" id="buyer_V" step="0.01" value="10000">
+                        </div>
+
+                        <div class="field">
+                            <label><span class="k">Минимальная ставка кэшбэка</span><span>доля</span></label>
+                            <input type="number" id="buyer_rmin" step="0.0001" value="0.005">
+                        </div>
+
+                        <div class="field">
+                            <label><span class="k">Максимальная ставка кэшбэка</span><span>доля</span></label>
+                            <input type="number" id="buyer_rmax" step="0.0001" value="0.05">
+                        </div>
+
+                        <div class="field">
+                            <label><span class="k">Скорость снижения кэшбэка по мере роста supply (μ)</span><span>1/WBX</span></label>
+                            <input type="number" id="buyer_mu" step="0.0000000001" value="0.000000001">
+                        </div>
+                    </div>
+                    <div class="results">
+                        <div class="kv">
+                            <div class="k">Текущая цена токена P(S_t)</div>
+                            <div class="v ok" id="buyer_P"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Ставка кэшбэка при текущем supply</div>
+                            <div class="v" id="buyer_r"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Запрошенная награда покупателя (заявка)</div>
+                            <div class="v" id="buyer_dtilde"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Фактически выдано покупателю в этой эпохе</div>
+                            <div class="v ok" id="buyer_D"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Оставшийся лимит корзины покупателей</div>
+                            <div class="v" id="buyer_left"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Итоговая выплата с учётом лимита</div>
+                            <div class="v" id="buyer_capped"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right">
+                    <div class="field w12">
+                        <canvas id="chart_buyer_r" aria-label="График зависимости кэшбэка от supply"></canvas>
+                        <div class="small">
+                            График показывает, как ставка кэшбэка уменьшается по мере роста общего количества токенов в обращении.
+                            Вертикальная линия — текущее значение supply \(S_t\).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SELLER -->
+    <section class="card" id="card-seller">
+        <div class="top">
+            <div class="head">
+                <h2>2) Продавец: bitcoin-like halving как заявка на бюджет</h2>
+                <div class="subtitle">Сначала \(\tilde D^{(seller)}\), затем доля из \(M_t\) и проверка корзины.</div>
+            </div>
+            <div class="pill">Seller</div>
+        </div>
+        <div class="content">
+            <div class="note">
+                Продавец получает WBX за развитие платформы: ассортимент, качество карточек и оборот. Награда со
+                временем уменьшается по halving‑логике, как в Bitcoin: ранние эпохи поощряются сильнее. Калькулятор
+                считает заявку продавца на награду в текущей эпохе, а затем показывает, сколько WBX он реально получит
+                из общего бюджета с учётом лимита корзины продавцов.
+            </div>
+            <div class="note">
+              <strong>Параметры модели для продавцов</strong><br><br>
+              <div class="small">
+                <b>Th (эпох)</b> — период «halving». Каждые <em>Th</em> эпох базовая награда уменьшается вдвое. Ранние эпохи поощряются сильнее.<br>
+                <b>E0 (WBX)</b> — стартовая базовая награда в первой эпохе. От неё дальше идут все уменьшения.<br>
+                <b>L (шт)</b> — количество активных товаров или позиций продавца. Шире ассортимент — выше вклад.<br>
+                <b>q (0..1)</b> — коэффициент качества: карточки товаров, SLA, отзывы. 1 — идеально, 0 — почти нет пользы.<br>
+                <b>GMV продавца</b> — подтверждённый оборот за эпоху. Это прямой вклад в рост платформы.<br>
+                <b>α</b> — насколько система ценит нефинансовую активность (ассортимент, качество).<br>
+                <b>β</b> — насколько система ценит денежный вклад через продажи.<br><br>
+                Сначала считается «идеальная» награда продавца за эпоху с учётом halving, активности и оборота — это заявка продавца.
+                Затем система ограничивает её общим бюджетом эпохи и лимитом корзины продавцов.
+              </div>
+            </div>
+
+            <div class="split">
+                <div class="left">
+                    <div class="grid">
+                        <div class="field">
+                            <label><span class="k">Th</span><span>эпох</span></label>
+                            <input type="number" id="seller_Th" step="1" value="4">
+                        </div>
+
+                        <div class="field">
+                            <label><span class="k">E0</span><span>WBX</span></label>
+                            <input type="number" id="seller_E0" step="0.01" value="1000">
+                        </div>
+
+                        <div class="field">
+                            <label><span class="k">Текущая эпоха t</span><span>эпох</span></label>
+                            <input type="number" id="seller_t" step="1" min="0" value="0">
+                        </div>
+
+                        <div class="field">
+                            <label><span class="k">L</span><span>шт</span></label>
+                            <input type="number" id="seller_L" step="1" value="100">
+                        </div>
+
+                        <div class="field">
+                            <label><span class="k">q</span><span>0..1</span></label>
+                            <input type="number" id="seller_q" step="0.01" min="0" max="1" value="0.85">
+                        </div>
+
+                        <div class="field">
+                            <label><span class="k">GMV продавца</span><span>фиат/эпоха</span></label>
+                            <input type="number" id="seller_GMV" step="0.01" value="200000">
+                        </div>
+
+                        <div class="field">
+                            <label><span class="k">α (вклад активности)</span><span>—</span></label>
+                            <input type="number" id="seller_alpha" step="0.0001" value="0.01">
+                        </div>
+
+                        <div class="field">
+                            <label><span class="k">β (вклад оборота)</span><span>—</span></label>
+                            <input type="number" id="seller_beta" step="0.0001" value="0.02">
+                        </div>
+                    </div>
+                    <div class="results">
+                        <div class="kv">
+                            <div class="k">Текущая цена токена</div>
+                            <div class="v ok" id="seller_P"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Номер шага halving в этой эпохе</div>
+                            <div class="v" id="seller_floor"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Базовая награда продавца в этой эпохе</div>
+                            <div class="v" id="seller_Et"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Запрошенная награда продавца (заявка)</div>
+                            <div class="v" id="seller_dtilde"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Фактически выделено продавцу из общего бюджета</div>
+                            <div class="v ok" id="seller_D"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Оставшийся лимит наград продавцов</div>
+                            <div class="v" id="seller_left"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Итоговая выплата с учётом лимита</div>
+                            <div class="v" id="seller_capped"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right">
+                    <div class="field w12">
+                        <canvas id="chart_seller_E" aria-label="График E(t)"></canvas>
+                        <div class="small">
+                            График показывает, как базовая награда продавца уменьшается со временем по halving‑логике.
+                            По оси X — эпохи, по оси Y — значение \(E(t)\).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- REF -->
+    <section class="card" id="card-ref">
+        <div class="top">
+            <div class="head">
+                <h2>3) Реферал: награда за подтверждённый GMV как заявка на бюджет</h2>
+                <div class="subtitle">\(\sigma(S)\) затухает с ростом supply, затем доля из \(M_t\) и проверка
+                    корзины.
+                </div>
+            </div>
+            <div class="pill">Referral</div>
+        </div>
+        <div class="content">
+            <div class="note">
+                Реферал получает WBX за приведённый и подтверждённый оборот. Чем больше система и supply, тем ниже
+                ставка вознаграждения за нового пользователя. Калькулятор считает заявку реферала на награду за текущий
+                оборот и показывает, какая часть заявки будет реально выплачена в рамках бюджета и лимита корзины
+                рефералов.
+            </div>
+            <div class="note" id="ref-note">
+              <strong>Параметры модели для рефералов</strong><br><br>
+              <div class="small">
+                <b>Подтверждённый GMV</b> — оборот, реально совершённый приведёнными пользователями за эпоху.
+                Это база, от которой считается вознаграждение реферала.<br>
+                <b>σ0 (базовая ставка)</b> — начальная доля вознаграждения на ранней стадии системы,
+                когда общий supply ещё небольшой.<br>
+                <b>ν (скорость затухания)</b> — параметр, определяющий, как быстро ставка реферала снижается
+                по мере роста общего supply токена.
+                Чем больше ν, тем быстрее реферальные награды «схлопываются» при росте системы.<br><br>
+                Сначала по текущему supply считается ставка σ(S).
+                Затем оборот переводится в заявку на награду в WBX по текущей цене токена.
+                После этого система ограничивает выплату общим бюджетом эпохи и лимитом корзины рефералов.
+              </div>
+            </div>
+            <script>
+                window.addEventListener('load', () => {
+                    if (window.MathJax?.typesetPromise) {
+                        MathJax.typesetPromise([document.getElementById('ref-note')]);
+                    }
+                });
+
+                function rerenderLatex() {
+                    if (window.MathJax?.typesetPromise) MathJax.typesetPromise();
+                }
+            </script>
+
+            <div class="split">
+                <div class="left">
+                    <div class="grid">
+                        <div class="field">
+                            <label><span class="k">Подтверждённый GMV</span><span>фиат/эпоха</span></label>
+                            <input type="number" id="ref_GMV" step="0.01" value="50000">
+                        </div>
+
+                        <div class="field">
+                            <label><span class="k">Базовая ставка σ0</span><span>доля</span></label>
+                            <input type="number" id="ref_sigma0" step="0.0001" value="0.02">
+                        </div>
+
+                        <div class="field">
+                            <label><span class="k">Скорость затухания ν</span><span>1/WBX</span></label>
+                            <input type="number" id="ref_nu" step="0.0000000001" value="0.000000001">
+                        </div>
+                    </div>
+                    <div class="results">
+                        <div class="kv">
+                            <div class="k">Текущая цена токена</div>
+                            <div class="v ok" id="ref_P"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Ставка награды реферала при текущем размере системы</div>
+                            <div class="v" id="ref_sigma"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Запрошенная награда реферала (заявка)</div>
+                            <div class="v" id="ref_dtilde"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Фактически выделено рефералу из общего бюджета</div>
+                            <div class="v ok" id="ref_D"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Оставшийся лимит наград рефералов</div>
+                            <div class="v" id="ref_left"></div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Итоговая выплата с учётом лимита</div>
+                            <div class="v" id="ref_capped"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right">
+                    <div class="field w12">
+                        <canvas id="chart_ref_sigma" aria-label="График sigma(S)"></canvas>
+                        <div class="small">
+                            График показывает, как ставка вознаграждения рефералов убывает
+                            по мере роста общего supply токена.
+                            Вертикальная линия — текущее значение \(S_t\).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<footer>
+
+</footer>
+
+<script>
+    // -------- utilities
+    function n(id) {
+        const el = document.getElementById(id);
+        const v = el.value;
+        if (v === "" || v === null || v === undefined) return NaN;
+        return Number(v);
+    }
+
+    function fmt(x, digits = 6) {
+        if (!isFinite(x)) return "—";
+        const abs = Math.abs(x);
+        if (abs !== 0 && (abs < 1e-6 || abs >= 1e9)) return x.toExponential(6);
+        return x.toLocaleString('en-US', {maximumFractionDigits: digits});
+    }
+
+    function clip(x, lo, hi) {
+        if (!isFinite(x)) return NaN;
+        if (isFinite(lo) && x < lo) return lo;
+        if (isFinite(hi) && x > hi) return hi;
+        return x;
+    }
+
+    // -------- global price curve
+    function priceParams() {
+        const P0 = n('g_P0'), Pmax = n('g_Pmax'), Smax = n('g_Smax_curve');
+        const a = P0;
+        const b = (Pmax - P0) / Smax;
+        return {a, b, Smax};
+    }
+
+    function PofS(S) {
+        const {a, b} = priceParams();
+        return a + b * S;
+    }
+
+    // -------- budget (global)
+    function calcBudget() {
+        const GMV = n('g_GMV'), GMVstar = n('g_GMV_star');
+        const k0 = n('g_kappa0'), eta = n('g_eta'), kmin = n('g_kmin'), kmax = n('g_kmax');
+        const B = n('g_B'), I = n('g_I'), omega = n('g_omega');
+        const Mmin = n('g_Mmin'), Mmax = n('g_Mmax');
+
+        const ratio = (GMVstar > 0) ? (GMV / GMVstar) : NaN;
+        const kappa_raw = k0 * Math.pow(Math.max(ratio, 0), eta);
+        const kappa_t = clip(kappa_raw, kmin, kmax);
+
+        const M_raw = kappa_t * B + omega * I;
+        const M = clip(M_raw, Mmin, Mmax);
+
+        return {kappa_t, M, ratio, M_raw};
+    }
+
+    // -------- demands (tilde D)
+    function demandBuyer(St, Pt) {
+        const V = n('buyer_V'), rmin = n('buyer_rmin'), rmax = n('buyer_rmax'), mu = n('buyer_mu');
+        const r = rmin + (rmax - rmin) * Math.exp(-mu * St);
+        const Dtilde = (r * V) / Pt;
+        return {r, Dtilde};
+    }
+
+    function demandSeller(Pt) {
+        const Th = n('seller_Th'), E0 = n('seller_E0');
+        const L = n('seller_L'), q = n('seller_q'), GMV = n('seller_GMV');
+        const alpha = n('seller_alpha'), beta = n('seller_beta');
+
+        const t = n('seller_t');
+        const ThSafe = (isFinite(Th) && Th > 0) ? Th : 1;
+        const tSafe = (isFinite(t) && t >= 0) ? t : 0;
+
+        const k = Math.floor(tSafe / ThSafe);
+        const Et = E0 * Math.pow(2, -k);
+        const term = (alpha * L * q) + (beta * (GMV / Pt));
+        const Dtilde = Et * term;
+        return {k, Et, Dtilde};
+    }
+
+    function demandRef(St, Pt) {
+        const GMVref = n('ref_GMV'), sigma0 = n('ref_sigma0'), nu = n('ref_nu');
+        const sigma = sigma0 * Math.exp(-nu * St);
+        const Dtilde = (sigma * GMVref) / Pt;
+        return {sigma, Dtilde};
+    }
+
+    // -------- apply normalization + caps
+    function normalizeAndCap(M, dtilde_b, dtilde_s, dtilde_r) {
+        const sum = dtilde_b + dtilde_s + dtilde_r;
+        const Db = (sum > 0) ? M * (dtilde_b / sum) : 0;
+        const Ds = (sum > 0) ? M * (dtilde_s / sum) : 0;
+        const Dr = (sum > 0) ? M * (dtilde_r / sum) : 0;
+
+        const capB = n('buyer_cap'), issuedB = n('buyer_issued');
+        const capS = n('seller_cap'), issuedS = n('seller_issued');
+        const capR = n('ref_cap'), issuedR = n('ref_issued');
+
+        const leftB = Math.max(capB - issuedB, 0);
+        const leftS = Math.max(capS - issuedS, 0);
+        const leftR = Math.max(capR - issuedR, 0);
+
+        const Db_cap = Math.min(Db, leftB);
+        const Ds_cap = Math.min(Ds, leftS);
+        const Dr_cap = Math.min(Dr, leftR);
+
+        return {
+            sum,
+            Db, Ds, Dr,
+            leftB, leftS, leftR,
+            Db_cap, Ds_cap, Dr_cap
+        };
+    }
+
+    // -------- charts (canvas)
+    function drawAxes(ctx, w, h, pad) {
+        ctx.clearRect(0, 0, w, h);
+        ctx.globalAlpha = 1;
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "rgba(255,255,255,0.16)";
+        ctx.beginPath();
+        ctx.moveTo(pad, pad);
+        ctx.lineTo(pad, h - pad);
+        ctx.lineTo(w - pad, h - pad);
+        ctx.stroke();
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.font = "12px ui-sans-serif, system-ui";
+    }
+
+    function drawLineChart(canvasId, xs, ys, opts) {
+        const c = document.getElementById(canvasId);
+        const ctx = c.getContext('2d');
+
+        // handle DPR (reset transform each time)
+        const cssW = c.clientWidth, cssH = c.clientHeight;
+        const dpr = window.devicePixelRatio || 1;
+        c.width = Math.floor(cssW * dpr);
+        c.height = Math.floor(cssH * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const w = cssW, h = cssH;
+        const pad = 28;
+
+        drawAxes(ctx, w, h, pad);
+
+        const xmin = Math.min(...xs), xmax = Math.max(...xs);
+        const ymin = Math.min(...ys), ymax = Math.max(...ys);
+        const ylo = (opts && isFinite(opts.ylo)) ? opts.ylo : ymin;
+        const yhi = (opts && isFinite(opts.yhi)) ? opts.yhi : ymax;
+
+        function X(x) {
+            if (xmax === xmin) return pad + (w - 2 * pad) / 2;
+            return pad + (x - xmin) / (xmax - xmin) * (w - 2 * pad);
+        }
+
+        function Y(y) {
+            if (yhi === ylo) return pad + (h - 2 * pad) / 2;
+            return (h - pad) - (y - ylo) / (yhi - ylo) * (h - 2 * pad);
+        }
+
+        function niceTicks(min, max, n) {
+            if (!isFinite(min) || !isFinite(max) || n < 2) return [];
+            if (max === min) return [min];
+            const step = (max - min) / (n - 1);
+            const ticks = [];
+            for (let i = 0; i < n; i++) ticks.push(min + step * i);
+            return ticks;
+        }
+
+        // Y ticks + horizontal grid
+        const yTicks = niceTicks(ylo, yhi, 5);
+        ctx.strokeStyle = "rgba(255,255,255,0.10)";
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.font = "11px ui-sans-serif, system-ui";
+        for (const tv of yTicks) {
+            const py = Y(tv);
+            // grid line
+            ctx.beginPath();
+            ctx.moveTo(pad, py);
+            ctx.lineTo(w - pad, py);
+            ctx.stroke();
+            // tick
+            ctx.strokeStyle = "rgba(255,255,255,0.20)";
+            ctx.beginPath();
+            ctx.moveTo(pad - 4, py);
+            ctx.lineTo(pad, py);
+            ctx.stroke();
+            ctx.strokeStyle = "rgba(255,255,255,0.10)";
+            // label
+            const lbl = fmt(tv, 4);
+            ctx.fillText(lbl, 6, py + 4);
+        }
+
+        // X ticks
+        ctx.strokeStyle = "rgba(255,255,255,0.20)";
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.font = "11px ui-sans-serif, system-ui";
+
+        if (opts && opts.xTicksEpochs && isFinite(xmin) && isFinite(xmax) && xmax > xmin) {
+            const maxTicks = 12;
+            const span = xmax - xmin;
+            const rawStep = Math.max(1, Math.round(span / maxTicks));
+            const step = rawStep || 1;
+            for (let t = Math.ceil(xmin); t <= Math.floor(xmax); t += step) {
+                const px = X(t);
+                ctx.beginPath();
+                ctx.moveTo(px, h - pad);
+                ctx.lineTo(px, h - pad + 4);
+                ctx.stroke();
+                ctx.fillText(String(t), px - 6, h - pad + 16);
+            }
+        } else {
+            const xTicks = niceTicks(xmin, xmax, (opts && opts.xTicksCount) ? opts.xTicksCount : 5);
+            for (const tv of xTicks) {
+                const px = X(tv);
+                ctx.beginPath();
+                ctx.moveTo(px, h - pad);
+                ctx.lineTo(px, h - pad + 4);
+                ctx.stroke();
+                ctx.fillText(fmt(tv, 0), px - 10, h - pad + 16);
+            }
+        }
+
+        // line
+        ctx.strokeStyle = "rgba(106,167,255,0.95)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let i = 0; i < xs.length; i++) {
+            const px = X(xs[i]), py = Y(ys[i]);
+            if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+
+        // optional point value labels (sparse, to avoid clutter)
+        if (opts && opts.showPointLabels) {
+            const maxLabels = 18;
+            const step = Math.max(1, Math.round(xs.length / maxLabels));
+            ctx.fillStyle = "rgba(255,255,255,0.7)";
+            ctx.font = "10px ui-sans-serif, system-ui";
+            for (let i = 0; i < xs.length; i += step) {
+                const px = X(xs[i]), py = Y(ys[i]);
+                const valStr = fmt(ys[i], 4);
+                ctx.fillText(valStr, px + 4, py - 4);
+            }
+        }
+
+        // marker vertical line (optional)
+        if (opts && isFinite(opts.xMark)) {
+            const xm = opts.xMark;
+            ctx.strokeStyle = "rgba(255,255,255,0.35)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(X(xm), pad);
+            ctx.lineTo(X(xm), h - pad);
+            ctx.stroke();
+
+            ctx.fillStyle = "rgba(255,255,255,0.75)";
+            ctx.font = "12px ui-sans-serif, system-ui";
+            ctx.fillText(opts.xMarkLabel || "S", Math.min(X(xm) + 6, w - pad - 10), pad + 14);
+        }
+
+        // y label (legacy title)
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.font = "12px ui-sans-serif, system-ui";
+        if (opts && opts.title) {
+            ctx.fillText(opts.title, pad, pad - 10);
+        }
+
+        // Axis labels
+        if (opts && opts.xLabel) {
+            ctx.fillStyle = "rgba(255,255,255,0.70)";
+            ctx.font = "12px ui-sans-serif, system-ui";
+            ctx.fillText(opts.xLabel, Math.round(w / 2) - 40, h - 6);
+        }
+        if (opts && opts.yLabel) {
+            ctx.save();
+            ctx.translate(12, Math.round(h / 2));
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillStyle = "rgba(255,255,255,0.70)";
+            ctx.font = "12px ui-sans-serif, system-ui";
+            ctx.fillText(opts.yLabel, -Math.round(h / 2) + 20, 0);
+            ctx.restore();
+        }
+    }
+
+    function drawBudgetBars() {
+        const c = document.getElementById("chart_budget");
+        const ctx = c.getContext('2d');
+
+        const cssW = c.clientWidth, cssH = c.clientHeight;
+        const dpr = window.devicePixelRatio || 1;
+        c.width = Math.floor(cssW * dpr);
+        c.height = Math.floor(cssH * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const w = cssW, h = cssH;
+        const pad = 28;
+
+        // Clear + axes
+        drawAxes(ctx, w, h, pad);
+
+        const M = Number(document.getElementById('g_M').dataset.val || "0");
+        const B = n('g_B');
+        const U = n('g_U');
+        const BU = B + U;
+
+        // Headroom for prettier layout
+        const maxV = Math.max(M, BU, 1) * 1.15;
+
+        const plotH = h - 2 * pad;
+        const baseY = h - pad;
+
+        // Y ticks for bar chart
+        ctx.strokeStyle = "rgba(255,255,255,0.10)";
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.font = "11px ui-sans-serif, system-ui";
+        const ticks = 4;
+        for (let i = 0; i <= ticks; i++) {
+            const v = (maxV * i) / ticks;
+            const y = baseY - (v / maxV) * plotH;
+            ctx.beginPath();
+            ctx.moveTo(pad, y);
+            ctx.lineTo(w - pad, y);
+            ctx.stroke();
+            ctx.fillText(fmt(v, 0), 6, y + 4);
+        }
+        // y-axis label
+        ctx.save();
+        ctx.translate(12, Math.round(h / 2));
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillStyle = "rgba(255,255,255,0.70)";
+        ctx.font = "12px ui-sans-serif, system-ui";
+        ctx.fillText("WBX/эпоха", -Math.round(h / 2) + 20, 0);
+        ctx.restore();
+
+        // Helpers
+        function yFromVal(v) {
+            return baseY - (v / maxV) * plotH;
+        }
+
+        function roundedRect(x, y, ww, hh, r) {
+            const rr = Math.min(r, ww / 2, hh / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + rr, y);
+            ctx.arcTo(x + ww, y, x + ww, y + hh, rr);
+            ctx.arcTo(x + ww, y + hh, x, y + hh, rr);
+            ctx.arcTo(x, y + hh, x, y, rr);
+            ctx.arcTo(x, y, x + ww, y, rr);
+            ctx.closePath();
+        }
+
+        // Subtle horizontal grid
+        ctx.strokeStyle = "rgba(255,255,255,0.10)";
+        ctx.lineWidth = 1;
+        const gridN = 4;
+        for (let i = 1; i <= gridN; i++) {
+            const y = pad + (plotH * i) / (gridN + 1);
+            ctx.beginPath();
+            ctx.moveTo(pad, y);
+            ctx.lineTo(w - pad, y);
+            ctx.stroke();
+        }
+
+        // Layout: 2 columns (Mint vs Outflow), Outflow is stacked (B + U)
+        const barW = Math.min(92, Math.max(64, Math.round(w * 0.12)));
+        const gap = Math.round(barW * 0.9);
+        const totalW = barW * 2 + gap;
+        const startX = Math.round((w - totalW) / 2);
+
+        const xMint = startX;
+        const xOut = startX + barW + gap;
+
+        // Colors
+        const colMint = "rgba(106,167,255,0.75)";     // blue
+        const colBurn = "rgba(76,210,123,0.60)";      // green
+        const colUtil = "rgba(255,204,102,0.60)";     // warm
+
+        // Bars: Mint
+        const mintTop = yFromVal(M);
+        const mintH = baseY - mintTop;
+        ctx.fillStyle = colMint;
+        roundedRect(xMint, mintTop, barW, mintH, 10);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.14)";
+        ctx.stroke();
+
+        // Bars: Outflow stacked (B + U)
+        const outTop = yFromVal(BU);
+        const outH = baseY - outTop;
+        // background outline
+        ctx.fillStyle = "rgba(255,255,255,0.04)";
+        roundedRect(xOut, outTop, barW, outH, 10);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.14)";
+        ctx.stroke();
+
+        // Stack: burn at bottom, util above
+        const burnH = (B / maxV) * plotH;
+        const utilH = (U / maxV) * plotH;
+
+        // burn segment
+        if (burnH > 0) {
+            const y = baseY - burnH;
+            ctx.fillStyle = colBurn;
+            roundedRect(xOut, y, barW, burnH, 10);
+            ctx.fill();
+        }
+        // util segment (on top)
+        if (utilH > 0) {
+            const y = baseY - burnH - utilH;
+            ctx.fillStyle = colUtil;
+            // for top segment we still round a bit to look nice
+            roundedRect(xOut, y, barW, utilH, 10);
+            ctx.fill();
+        }
+
+        // Title
+        ctx.fillStyle = "rgba(255,255,255,0.60)";
+        ctx.font = "12px ui-sans-serif, system-ui";
+        ctx.fillText("Бюджет эпохи: выпуск и отток", pad, pad - 10);
+
+        // Values above bars
+        ctx.fillStyle = "rgba(255,255,255,0.80)";
+        ctx.font = "12px ui-sans-serif, system-ui";
+        const fmt0 = (v) => v.toLocaleString('en-US', {maximumFractionDigits: 0});
+        ctx.fillText(fmt0(M), xMint, Math.max(pad + 12, mintTop - 8));
+        ctx.fillText(fmt0(BU), xOut, Math.max(pad + 12, outTop - 8));
+
+        // Labels under bars
+        ctx.fillStyle = "rgba(255,255,255,0.65)";
+        ctx.font = "12px ui-sans-serif, system-ui";
+        ctx.fillText("Mint  M_t", xMint, baseY + 18);
+        ctx.fillText("Outflow  B_t+U_t", xOut, baseY + 18);
+
+        // Delta annotation
+        const delta = M - BU;
+        const deltaTxt = (delta >= 0)
+            ? `Δ = +${fmt0(delta)}  (чистая инфляция)`
+            : `Δ = ${fmt0(delta)}  (чистая дефляция)`;
+        ctx.fillStyle = (delta > 0)
+            ? "rgba(255,106,122,0.85)"   // red-ish
+            : (delta < 0)
+                ? "rgba(76,210,123,0.85)" // green
+                : "rgba(255,204,102,0.85)";
+        ctx.font = "12px ui-sans-serif, system-ui";
+        ctx.fillText(deltaTxt, pad, pad + 18);
+
+        // Legend (top-right)
+        const lx = w - pad - 170;
+        const ly = pad + 8;
+        ctx.font = "12px ui-sans-serif, system-ui";
+
+        function legendItem(x, y, color, text) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y - 10, 12, 12);
+            ctx.fillStyle = "rgba(255,255,255,0.70)";
+            ctx.fillText(text, x + 18, y);
+        }
+
+        legendItem(lx, ly, colMint, "M_t (выпуск)");
+        legendItem(lx, ly + 18, colBurn, "B_t (burn)");
+        legendItem(lx, ly + 36, colUtil, "U_t (util burn)");
+    }
+
+    // -------- orchestrator
+    function recalcAll() {
+        const St = n('g_S');
+        const {a, b, Smax} = priceParams();
+        const Pt = a + b * St;
+
+        const {kappa_t, M} = calcBudget();
+        const B = n('g_B');
+        const U = n('g_U');
+        const Snext = St + M - B;
+
+        // yearly budget estimation from context: 55% over 10 years -> 5.5%/year of total supply
+        const years = n('g_years');
+        const total55 = 0.55; // fraction of total supply allocated to incentives in context
+        const annualFrac = (years > 0) ? (total55 / years) : NaN;
+
+        // for demo we interpret "total supply" as curve cap Smax_curve / 0.55  (so that 55% maps to Smax_curve)
+        // This keeps numbers consistent without assuming an external S_total.
+        const Stotal_est = (Smax > 0) ? (Smax / total55) : NaN;
+        const annualBudget = annualFrac * Stotal_est;
+
+        // demands
+        const bRes = demandBuyer(St, Pt);
+        const sRes = demandSeller(Pt);
+        const rRes = demandRef(St, Pt);
+
+        const norm = normalizeAndCap(M, bRes.Dtilde, sRes.Dtilde, rRes.Dtilde);
+
+        // global output
+        document.getElementById('g_a').textContent = fmt(a, 10);
+        document.getElementById('g_b').textContent = fmt(b, 12);
+        document.getElementById('g_P').textContent = fmt(Pt, 8);
+
+        document.getElementById('g_kappa_t').textContent = fmt(kappa_t, 6);
+        const gM = document.getElementById('g_M');
+        gM.textContent = fmt(M, 6);
+        gM.dataset.val = String(M);
+
+        document.getElementById('g_S_next').textContent = fmt(Snext, 0);
+
+        const neutral = (M > (B + U) * 1.05) ? ["bad", "M_t > B_t+U_t (инфляц.)"] :
+            (M < (B + U) * 0.95) ? ["warn", "M_t < B_t+U_t (дефляц.)"] :
+                ["ok", "M_t ≈ B_t+U_t (около нейтр.)"];
+        const neuEl = document.getElementById('g_neutral');
+        neuEl.textContent = neutral[1];
+        neuEl.className = "v " + neutral[0];
+
+        document.getElementById('g_year_budget').textContent = fmt(annualBudget, 0) + " WBX/год (оценка)";
+
+        // buyer outputs
+        document.getElementById('buyer_P').textContent = fmt(Pt, 8);
+        document.getElementById('buyer_r').textContent = fmt(bRes.r, 8);
+        document.getElementById('buyer_dtilde').textContent = fmt(bRes.Dtilde, 6);
+        document.getElementById('buyer_D').textContent = fmt(norm.Db, 6);
+        document.getElementById('buyer_left').textContent = fmt(norm.leftB, 0);
+        const bcapEl = document.getElementById('buyer_capped');
+        bcapEl.textContent = fmt(norm.Db_cap, 6);
+        bcapEl.className = "v " + ((norm.Db_cap < norm.Db) ? "warn" : "ok");
+
+        // seller outputs
+        document.getElementById('seller_P').textContent = fmt(Pt, 8);
+        document.getElementById('seller_floor').textContent = String(sRes.k);
+        document.getElementById('seller_Et').textContent = fmt(sRes.Et, 6);
+        document.getElementById('seller_dtilde').textContent = fmt(sRes.Dtilde, 6);
+        document.getElementById('seller_D').textContent = fmt(norm.Ds, 6);
+        document.getElementById('seller_left').textContent = fmt(norm.leftS, 0);
+        const scapEl = document.getElementById('seller_capped');
+        scapEl.textContent = fmt(norm.Ds_cap, 6);
+        scapEl.className = "v " + ((norm.Ds_cap < norm.Ds) ? "warn" : "ok");
+
+        // ref outputs
+        document.getElementById('ref_P').textContent = fmt(Pt, 8);
+        document.getElementById('ref_sigma').textContent = fmt(rRes.sigma, 8);
+        document.getElementById('ref_dtilde').textContent = fmt(rRes.Dtilde, 6);
+        document.getElementById('ref_D').textContent = fmt(norm.Dr, 6);
+        document.getElementById('ref_left').textContent = fmt(norm.leftR, 0);
+        const rcapEl = document.getElementById('ref_capped');
+        rcapEl.textContent = fmt(norm.Dr_cap, 6);
+        rcapEl.className = "v " + ((norm.Dr_cap < norm.Dr) ? "warn" : "ok");
+
+        // charts
+        drawPriceEpochChart(St, M, B, years);
+        drawPriceSupplyChart("chart_price_supply", St, Smax);
+        drawBudgetBars();
+        drawBuyerRChart(St, Smax);
+        drawSellerEChart();
+        drawRefSigmaChart(St, Smax);
+    }
+
+    // -------- chart data builders
+    function drawPriceEpochChart(St, M, B, yearsRaw) {
+        const {a, b} = priceParams();
+        const years = (isFinite(yearsRaw) && yearsRaw > 0) ? yearsRaw : 1;
+        const totalEpochs = Math.floor(years * 12);
+        const xs = [], ys = [];
+
+        let S = St;
+        for (let t = 0; t <= totalEpochs; t++) {
+            const Pt = a + b * S;
+            xs.push(t);
+            ys.push(Pt);
+            S = S + M - B;
+        }
+
+        drawLineChart("chart_price", xs, ys, {
+            title: "Цена по эпохам",
+            xTicksEpochs: true,
+            showPointLabels: true,
+            xLabel: "Эпоха t",
+            yLabel: "Цена (фиат/WBX)"
+        });
+    }
+
+
+    function drawPriceSupplyChart(canvasId, St, Smax) {
+        const {a, b} = priceParams();
+        const N = 80;
+        const xs = [], ys = [];
+        for (let i = 0; i <= N; i++) {
+            const S = (Smax * i) / N;
+            xs.push(S);
+            ys.push(a + b * S);
+        }
+        drawLineChart(canvasId, xs, ys, {
+            title: "Цена WBX по supply",
+            xMark: St,
+            xMarkLabel: "S_t",
+            xLabel: "Supply S (WBX)",
+            yLabel: "Цена (фиат/WBX)"
+        });
+    }
+
+    function drawBuyerRChart(St, Smax) {
+        const rmin = n('buyer_rmin'), rmax = n('buyer_rmax'), mu = n('buyer_mu');
+        const N = 60;
+        const xs = [], ys = [];
+        for (let i = 0; i <= N; i++) {
+            const x = (Smax * i) / N;
+            xs.push(x);
+            ys.push(rmin + (rmax - rmin) * Math.exp(-mu * x));
+        }
+        drawLineChart("chart_buyer_r", xs, ys, {
+            title: "r(S)",
+            xMark: St,
+            xMarkLabel: "S_t",
+            xTicksCount: 5,
+            xLabel: "Supply S (WBX)",
+            yLabel: "Кэшбэк r(S)"
+        });
+    }
+
+    function drawSellerEChart() {
+        const Th = n('seller_Th'), E0 = n('seller_E0');
+        const tCur = n('seller_t');
+        const tMark = (isFinite(tCur) && tCur >= 0) ? tCur : 0;
+        const yearsRaw = n('g_years');
+        const years = (isFinite(yearsRaw) && yearsRaw > 0) ? yearsRaw : 1;
+        const totalEpochs = Math.floor(years * 12);
+        const xs = [], ys = [];
+        for (let t = 0; t <= totalEpochs; t++) {
+            const k = Math.floor(t / Th);
+            xs.push(t);
+            ys.push(E0 * Math.pow(2, -k));
+        }
+        drawLineChart("chart_seller_E", xs, ys, {
+            title: "E(t)",
+            xTicksEpochs: true,
+            showPointLabels: true,
+            xMark: tMark,
+            xMarkLabel: "t",
+            xLabel: "Эпоха t",
+            yLabel: "Награда E(t) (WBX)"
+        });
+    }
+
+    function drawRefSigmaChart(St, Smax) {
+        const sigma0 = n('ref_sigma0'), nu = n('ref_nu');
+        const N = 60;
+        const xs = [], ys = [];
+        for (let i = 0; i <= N; i++) {
+            const x = (Smax * i) / N;
+            xs.push(x);
+            ys.push(sigma0 * Math.exp(-nu * x));
+        }
+        drawLineChart("chart_ref_sigma", xs, ys, {
+            title: "σ(S)",
+            xMark: St,
+            xMarkLabel: "S_t",
+            xTicksCount: 5,
+            xLabel: "Supply S (WBX)",
+            yLabel: "Ставка σ(S)"
+        });
+    }
+
+    // -------- reset
+    function resetAll() {
+        document.getElementById('g_S').value = 100000000;
+
+        document.getElementById('g_P0').value = 0.05;
+        document.getElementById('g_Pmax').value = 1.05;
+        document.getElementById('g_Smax_curve').value = 500000000;
+
+        document.getElementById('g_GMV').value = 100000000;
+        document.getElementById('g_GMV_star').value = 100000000;
+        document.getElementById('g_kappa0').value = 1.0;
+        document.getElementById('g_eta').value = 0.5;
+        document.getElementById('g_kmin').value = 0.3;
+        document.getElementById('g_kmax').value = 1.2;
+
+        document.getElementById('g_B').value = 50000;
+        document.getElementById('g_U').value = 20000;
+        document.getElementById('g_I').value = 80000;
+        document.getElementById('g_omega').value = 0.5;
+        document.getElementById('g_Mmin').value = 0;
+        document.getElementById('g_Mmax').value = 300000;
+        document.getElementById('g_years').value = 10;
+
+        document.getElementById('buyer_V').value = 10000;
+        document.getElementById('buyer_rmin').value = 0.005;
+        document.getElementById('buyer_rmax').value = 0.05;
+        document.getElementById('buyer_mu').value = 0.000000001;
+        document.getElementById('buyer_cap').value = 250000000;     // 25% of "total55 mapped"
+        document.getElementById('buyer_issued').value = 60000000;
+
+        document.getElementById('seller_Th').value = 4;
+        document.getElementById('seller_E0').value = 1000;
+        document.getElementById('seller_t').value = 0;
+        document.getElementById('seller_L').value = 100;
+        document.getElementById('seller_q').value = 0.85;
+        document.getElementById('seller_GMV').value = 200000;
+        document.getElementById('seller_alpha').value = 0.01;
+        document.getElementById('seller_beta').value = 0.02;
+        document.getElementById('seller_cap').value = 150000000;    // 15%
+        document.getElementById('seller_issued').value = 35000000;
+
+        document.getElementById('ref_GMV').value = 50000;
+        document.getElementById('ref_sigma0').value = 0.02;
+        document.getElementById('ref_nu').value = 0.000000001;
+        document.getElementById('ref_cap').value = 50000000;        // 5%
+        document.getElementById('ref_issued').value = 12000000;
+
+        recalcAll();
+    }
+
+    // live hooks
+    function hookAllInputs() {
+        document.querySelectorAll('input').forEach(inp => inp.addEventListener('input', () => recalcAll()));
+        window.addEventListener('resize', () => recalcAll());
+    }
+
+    hookAllInputs();
+    resetAll();
+</script>
+</body>
